@@ -1,35 +1,57 @@
+'use client'
+
 import Link from 'next/link';
-import imgFundo from '../../../public/images/fundo1.jpg';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import AuthPage from '../components/AuthPage';
+import AuthInput from '../components/AuthInput';
+import AuthButton from '../components/AuthButton';
 
 const Login = () => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isFormValid, setIsFormValid] = useState(false)
+
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+
+  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    axios.post('http://localhost:8001/api/auth/login', { email, password })
+      .then((res) => {
+        setSuccess(res.data.msg);
+        setError('')
+        console.log(res);
+      }).catch((err) => {
+        setError(err.response.data.msg)
+        setSuccess('');
+        console.log(err);
+      })
+  }
+
+  useEffect(() => {
+    if (email !== '' && password !== '') {
+      setIsFormValid(true);
+    } else {
+      setIsFormValid(false);
+    }
+  }, [email, password]);
+
+  console.log(email, password);
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center relative">
-      <div className="absolute inset-0 bg-no-repeat bg-cover bg-center sm:bg-left"
-        style={{
-          backgroundImage: `url(${imgFundo.src})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center 70%",
-          filter: "brightness(60%) contrast(90%)",
-        }}>
+    <AuthPage>
+      <h1 className='font-bold text-2x text-gray-700 text-2xl font-mono'>Login</h1>
+      <AuthInput label='Email' newState={setEmail}></AuthInput>
+      <AuthInput label='Senha' newState={setPassword} isPassword autoComplete={false}></AuthInput>
+      <AuthButton texto="Registrar" isFormValid={isFormValid} handleFunction={handleLogin} />
+      <div className='text-center underline text-blue-500 mt-2 text-sm sm:text-blue-100'>
+        <Link href="/register">Cadastrar-se</Link>
       </div>
-      <div className="z-10 h-screen flex items-center justify-center">
-        <div className='flex flex-col bg-white px-6 py-9 rounded-2xl gap-9 text-gray-600 w-96 h-fit'>
-          <form action="">
-            <h1 className='font-bold text-2x text-gray-700 text-2xl font-mono'>Login</h1>
-            <div className='flex flex-col justify-between items-start'>
-              <label htmlFor="email">Email:</label>
-              <input className='border-gray-400 border-b w-full focus-visible:border-gray-900 focus-visible:border-b focus-visible:outline-none' type="text" name="" id="email" />
-              <label htmlFor="password">Password:</label>
-              <input className='border-gray-400 border-b w-full focus-visible:border-gray-900 focus-visible:border-b focus-visible:outline-none' type="password" name="" id="password" />
-              <button className="bg-green-500 py-3 font-bold text-white rounded-lg hover:bg-green-800 mt-2 w-full">Entrar</button>
-            </div>
-            <div className='text-center underline text-blue-500 mt-2 text-sm sm:text-blue-100'>
-              <Link href="/register" >Cadastrar-se</Link>
-            </div>
-          </form>
-        </div>
-      </div>
-    </main>
+      {error.length > 1 && <span className="text-red-700 mt-2">* {error}</span>}
+      {success && <span className="text-green-700 mt-2">* {success}</span>}
+    </AuthPage >
+
   );
 };
 
