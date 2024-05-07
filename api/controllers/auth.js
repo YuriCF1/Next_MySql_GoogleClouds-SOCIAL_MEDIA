@@ -1,7 +1,7 @@
 import { db } from "../connect.js";
 import bcrypt from "bcrypt";
 
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
 export const register = (req, res) => {
   const { username, email, password, confirmPassword } = req.body;
@@ -96,24 +96,33 @@ export const login = (req, res) => {
 
         try {
           //Fazendo a validação para ver se o usuário está logado
-          const refreshToken = jwt.sign({
-            exp: Math.floor(Date.now()/1000) + 24 * 60 * 60,
-            id: user.password
-          },
-          process.env.REFRESH,
-          {algorithm: "HS256"}
-          )
-          const token = jwt.sign({
-            exp: Math.floor(Date.now()/1000) + 3600,
-            id: user.password
-          },
-          process.env.TOKEN,
-          {algorithm: "HS256"}
-          )
-          res.status(200).json({msg: "Usuário logado com sucesso!", token, refreshToken})
-        } catch(err) {
+          const refreshToken = jwt.sign(
+            {
+              exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
+              id: user.password,
+            },
+            process.env.REFRESH,
+            { algorithm: "HS256" }
+          );
+          const token = jwt.sign(
+            {
+              exp: Math.floor(Date.now() / 1000) + 3600,
+              id: user.password,
+            },
+            process.env.TOKEN,
+            { algorithm: "HS256" }
+          );
+          res
+            .status(200)
+            .json({
+              msg: "Usuário logado com sucesso!",
+              data: { user, token: [token, refreshToken] },
+            });
+        } catch (err) {
           console.log(err);
-          return res.status(500).json({msg: "Aconteceu algum problema no servidor. Tente novamente mais tarde"})
+          return res.status(500).json({
+            msg: "Aconteceu algum problema no servidor. Tente novamente mais tarde",
+          });
         }
       }
     }
