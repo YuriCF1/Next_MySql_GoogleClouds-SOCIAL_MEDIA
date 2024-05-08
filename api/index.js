@@ -2,7 +2,6 @@ import express from "express";
 import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
 import cors from "cors";
-
 import bodyParser from "body-parser";
 
 const app = express();
@@ -19,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false })); //Recebendo os dados pelo m
 app.use("/api/users/", userRouter);
 app.use("/api/auth/", authRouter);
 
-app.listen(8001, () => {
+const portS = process.env.PORTS;
+app.listen(portS, () => {
   console.log("Servidor rodando para a porta 8001");
 });
