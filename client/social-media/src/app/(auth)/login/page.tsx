@@ -6,6 +6,7 @@ import AuthPage from '../layout';
 import AuthInput from '../../components/AuthInput';
 import AuthButton from '../../components/AuthButton';
 import { makeRequest } from '../../../../axios';
+import { useRouter } from 'next/navigation';
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -15,18 +16,23 @@ const Login = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
+  const router = useRouter()
+
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     makeRequest
       .post('auth/login', { email, password })
       .then((res) => {
+        router.push('/')
+        console.log(res.data);
+        localStorage.setItem('rede-social:user', JSON.stringify(res.data.data.user))
+        localStorage.setItem('rede-social:token', JSON.stringify(res.data.data.token))
         setSuccess(res.data.msg);
         setError('')
-        console.log(res);
       }).catch((err) => {
+        console.log(err);
         setError(err.response.data.msg)
         setSuccess('');
-        console.log(err);
       })
   }
 
@@ -54,7 +60,7 @@ const Login = () => {
       {error.length > 1 && <span className="text-red-700 mt-2">* {error}</span>}
       {success && <span className="text-green-700 mt-2">* {success}</span>}
     </>
-      // </AuthPage >
+    // </AuthPage >
   );
 };
 
