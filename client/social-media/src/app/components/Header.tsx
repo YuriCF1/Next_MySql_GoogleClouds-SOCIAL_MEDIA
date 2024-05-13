@@ -42,7 +42,8 @@ const header = () => {
                 </div>
                 <div onMouseLeave={() => setShowMenu(false)} className="relative">
                     <button onClick={() => setShowMenu(!showMenu)} className="flex gap-2 items-center">
-                        <img src={user.userImg.length > 0 ? user.userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'} alt="Imagem de pefil do usuário" className="w-12 h-12 rounded-full" />
+                        <img src={user.userImg.length > 0 ? user.userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'}
+                            alt="Imagem de pefil do usuário" className="w-12 h-12 rounded-full" />
                         <span className="font-bold">{user.username}</span>
                     </button>
                     {showMenu &&
