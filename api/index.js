@@ -1,6 +1,7 @@
 import express from "express";
 import userRouter from "./routes/user.js";
 import authRouter from "./routes/auth.js";
+import postRouter from "./routes/post.js";
 import cors from "cors";
 import bodyParser from "body-parser";
 
@@ -17,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: false })); //Recebendo os dados pelo m
 
 app.use("/api/users/", userRouter);
 app.use("/api/auth/", authRouter);
+app.use("/api/post/", postRouter);
 
 const portS = process.env.PORTS;
 app.listen(portS, () => {
