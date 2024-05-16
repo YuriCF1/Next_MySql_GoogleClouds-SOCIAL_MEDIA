@@ -1,10 +1,10 @@
 'use client'
 
 import { useEffect, useState } from "react";
-import AuthInput from "../../components/AuthInput"
+import AuthInput from "../../../components/AuthInput"
 import AuthPage from "../layout"
 import Link from "next/link";
-import AuthButton from "../../components/AuthButton";
+import AuthButton from "../../../components/AuthButton";
 import { makeRequest } from "../../../../axios";
 
 const Register = () => {
