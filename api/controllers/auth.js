@@ -96,6 +96,19 @@ export const login = (req, res) => {
 
         try {
           //Fazendo a validação para ver se o usuário está logado
+
+          /*
+jwt.sign(payload, secret, options): Gera um token JWT.
+payload: Os dados que você quer incluir no token. Aqui, você inclui a expiração (exp) e o ID do usuário (id).
+secret: A chave secreta usada para assinar o token. (process.env.REFRESH).
+options: As opções para assinar o token, como o algoritmo (HS256).
+
+res.cookie(name, value, options):
+name: O nome do cookie.
+value: O valor do cookie.
+options: Opções adicionais para o cookie.
+{ httpOnly: true }: Faz com que o cookie seja inacessível a scripts do lado do cliente, melhorando a segurança.
+*/
           const refreshToken = jwt.sign(
             {
               exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
@@ -112,11 +125,14 @@ export const login = (req, res) => {
             process.env.TOKEN,
             { algorithm: "HS256" }
           );
+          delete user.password;
           res
+            .cookie("accessToken", token, { httpOnly: true })
+            .cookie("refreshToken", refreshToken, { httpOnly: true })
             .status(200)
             .json({
               msg: "Usuário logado com sucesso!",
-              data: { user, token: [token, refreshToken] },
+              user,
             });
         } catch (err) {
           console.log(err);
@@ -127,4 +143,65 @@ export const login = (req, res) => {
       }
     }
   );
+};
+
+export const refresh = (req, res) => {
+  /*
+  O headers.cookie vem assim cookie: 'accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTU4NDUyMDUsImlkIjoiJDJiJDA4JFREV2pWYlFwMGhSL1g4UWgxUVBpdk9QRmp5N21KeDU1SFR0UWNXckJjcGdHVXRmR04zeEFXIiwiaWF0IjoxNzE1ODQxNjA1fQ.e5Em6PLVECAcUtydcaTpPZG_uzyTk3JzmsBTUtcl8Gs; refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTU5MjgwMDUsImlkIjoiJDJiJDA4JFREV2pWYlFwMGhSL1g4UWgxUVBpdk9QRmp5N21KeDU1SFR0UWNXckJjcGdHVXRmR04zeEFXIiwiaWF0IjoxNzE1ODQxNjA1fQ.7Nl35wcuVT3Z_Ok0HFDNPkS4Y7bio7S0UftVD2PvoE4',
+  'if-none-match': 'W/"27-C71jFqbxF7yB7qZhENEH2/NbLzc"
+  */
+  const authHeader = req.headers.cookie?.split("; ")[1];
+  const refresh = authHeader && authHeader.split("=")[1];
+  const tokenStruct = refresh.split(".")[1]; //ATÉ AQUI SERVE PARA PEGAR A SENHA DO USUÁRIO, PARA FAZRE UM NOVO TOKEN. Que é o id de cada token, sem o usuário ter que digitar novamente
+
+  const payload =
+    atob(
+      tokenStruct
+    ); /*Descriptografar o token na base64, que foi o que usei para definir o secret que coloquei no TOKEN em .env. 
+  Utilizando o comando node -e "console.log(require('crypto').randomBytes(256).toString('base64'))"*/
+
+  //Refazendo um novo token
+  try {
+    const refreshToken = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 24 * 60 * 60,
+        id: JSON.parse(payload).id,
+      },
+      process.env.REFRESH,
+      { algorithm: "HS256" }
+    );
+    const token = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 3600,
+        id: JSON.parse(payload).id, //Recebe o payload em string, então transformo em JSON e pego id, q é o password
+      },
+      process.env.TOKEN,
+      { algorithm: "HS256" }
+    );
+    res
+      .cookie("accessToken", token, { httpOnly: true })
+      .cookie("refreshToken", refreshToken, { httpOnly: true })
+      .status(200)
+      .json({
+        msg: "Token atualizado com sucesso!",
+      });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({
+      msg: "Aconteceu algum problema no servidor. Tente novamente mais tarde",
+    });
+  }
+};
+
+export const logout = (req, res) => {
+  /*
+  clearCookie = Função do EXPRESS
+  secure: true: Indica que o cookie deve ser enviado apenas em conexões HTTPS.
+  sameSite: "none": Indica que o cookie deve ser enviado em solicitações cross-site, útil para contextos onde o servidor e o cliente estão em domínios diferentes.
+  */
+  return res
+    .clearCoookie("accessToken", { secure: true, sameSite: "none" })
+    .clearCoookie("refreshToken", { secure: true, sameSite: "none" })
+    .status(200)
+    .json({ msg: "Logout efetuado com sucesso" });
 };
