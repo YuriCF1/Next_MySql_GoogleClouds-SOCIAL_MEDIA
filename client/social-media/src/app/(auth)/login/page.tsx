@@ -1,16 +1,17 @@
 'use client'
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import AuthPage from '../layout';
-import AuthInput from '../../components/AuthInput';
-import AuthButton from '../../components/AuthButton';
+import { useContext, useEffect, useState } from 'react';
+// import AuthPage from '../layout';
+import AuthInput from '../../../components/AuthInput';
+import AuthButton from '../../../components/AuthButton';
 import { makeRequest } from '../../../../axios';
 import { useRouter } from 'next/navigation';
+import { UserContext } from '@/context/UserContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('teste@email.com')
+  const [password, setPassword] = useState('teste')
   const [isFormValid, setIsFormValid] = useState(false)
 
   const [error, setError] = useState('');
@@ -18,17 +19,18 @@ const Login = () => {
 
   const router = useRouter()
 
+  const { setUser } = useContext(UserContext)
+
   const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     makeRequest
       .post('auth/login', { email, password })
       .then((res) => {
         router.push('/')
-        console.log(res.data);
-        localStorage.setItem('rede-social:user', JSON.stringify(res.data.data.user))
-        localStorage.setItem('rede-social:token', JSON.stringify(res.data.data.token))
+        localStorage.setItem('rede-social:user', JSON.stringify(res.data.user))
         setSuccess(res.data.msg);
         setError('')
+        setUser(res.data.user)
       }).catch((err) => {
         console.log(err);
         setError(err.response.data.msg)
@@ -57,7 +59,7 @@ const Login = () => {
       <div className='text-center underline text-blue-500 mt-2 text-sm sm:text-blue-100'>
         <Link href="/register">Cadastrar-se</Link>
       </div>
-      {error.length > 1 && <span className="text-red-700 mt-2">* {error}</span>}
+      {error && <span className="text-red-700 mt-2">* {error}</span>}
       {success && <span className="text-green-700 mt-2">* {success}</span>}
     </>
     // </AuthPage >
