@@ -2,8 +2,8 @@ import { FaThumbsUp, FaRegComment, FaPaperPlane } from 'react-icons/fa'
 
 import { useEffect, useState } from 'react'
 
-import IUser from '../interfaces/IUser'
-import { IPost } from '../interfaces/IPost'
+import IUser from '../app/interfaces/IUser'
+import { IPost } from '../app/interfaces/IPost'
 
 const Post = (props: { post: IPost }) => {
     const [user, setUser] = useState<IUser | undefined>(undefined)

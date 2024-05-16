@@ -1,28 +1,32 @@
 'use client'
 
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link"
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaSearch, FaBell } from 'react-icons/fa'
 import { TbMessageCircle2Filled } from "react-icons/tb"
+import { makeRequest } from "../../axios";
+import { UserContext } from "@/context/UserContext";
 
 const header = () => {
-    const [user, setUser] = useState({ username: '', userImg: '' });
+    // const [user, setUser] = useState({ username: '', userImg: '' });
+    const { user, setUser } = useContext(UserContext)
     const [showMenu, setShowMenu] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        let value = localStorage.getItem('rede-social:user');
-        if (value) {
-            setUser(JSON.parse(value))
+    const mutation = useMutation({
+        mutationFn: async () => {
+            return await makeRequest.post("auth/logout").then((res) => {
+                res.data
+            })
+        },
+        onSuccess: () => {
+            localStorage.removeItem("rede-social:user");
+            router.push("login")
+            setUser(undefined)
         }
-    }, [])
-
-    const logout = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        e.preventDefault()
-        localStorage.removeItem('rede-social:token')
-        router.push('/login')
-    }
+    })
 
     return (
         <header className="w-full bg-white flex justify-between py-2 px-4 items-center shadow-md h-16">
@@ -42,14 +46,17 @@ const header = () => {
                 </div>
                 <div onMouseLeave={() => setShowMenu(false)} className="relative">
                     <button onClick={() => setShowMenu(!showMenu)} className="flex gap-2 items-center">
-                        <img src={user.userImg.length > 0 ? user.userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'}
+                        <img src={user
+                            ?
+                            user.userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'}
                             alt="Imagem de pefil do usuário" className="w-12 h-12 rounded-full" />
-                        <span className="font-bold">{user.username}</span>
+                        <span className="font-bold">{user?.username}</span>
                     </button>
                     {showMenu &&
                         <div className="absolute flex flex-col bg-white p-4 shadow-md rounded-md gap-2 border-t whitespace-nowrap right-[-15px]">
                             <Link className="border-b border-stone-200" href={''}>Editar perfil</Link>
-                            <Link onClick={(e) => logout(e)} href={''}>Sair</Link>
+                            {/* Precisa do mutate para acessar a função criada lá em cima */}
+                            <button onClick={() => mutation.mutate()}>Sair</button>
                         </div>
                     }
                 </div>

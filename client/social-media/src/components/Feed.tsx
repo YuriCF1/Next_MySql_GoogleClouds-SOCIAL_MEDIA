@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import Post from "./Post"
-import { IPost } from "../interfaces/IPost";
-import { makeRequest } from "../../../axios";
+import { IPost } from "../app/interfaces/IPost";
+import { makeRequest } from "../../axios";
 
 const Feed = () => {
 

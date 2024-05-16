@@ -1,22 +1,14 @@
 //Não precisa colocar o use client aqui, pois  o no componente pai já temstill 
 
 import Link from "next/link"
-import { useEffect, useState } from "react"
-
-import IUser from '@/app/interfaces/IUser'
+import { useContext } from "react"
+import { UserContext } from "@/context/UserContext"
 
 import { FaUserFriends, FaAlignLeft, FaPeopleArrows, FaStore, FaFlag, FaBookmark, FaCalendar } from 'react-icons/fa'
 import { TbDeviceImac, TbClockHour4 } from 'react-icons/tb'
 
 const SideBar = () => {
-    const [user, setUser] = useState<IUser | undefined>(undefined)
-
-    useEffect(() => {
-        let value = localStorage.getItem('rede-social:user');
-        if (value) {
-            setUser(JSON.parse(value))
-        }
-    }, [])
+    const { user } = useContext(UserContext)
 
     return (
         <aside className="pl-4">
