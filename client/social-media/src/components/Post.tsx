@@ -32,7 +32,7 @@ const Post = (props: { post: IPost }) => {
                 <div className='py-4 w-full'>
                     <span>{post_desc}</span>
                 </div>)}
-            {img && <img className='rounded-lg' src={img} alt="Imagem do post" />}
+            {img && <img className='rounded-lg' src={`./upload/${img}`} alt="Imagem do post" />}
             <div className='flex justify-between py-4 border-b'>
                 <div className='flex gap-1 items-center'>
                     <button className='bg-blue-500 text-white w-8 h-8 p-2 items-center flex justify-center rounded-full text-2xl'>
