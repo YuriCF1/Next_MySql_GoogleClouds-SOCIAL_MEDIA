@@ -5,6 +5,7 @@ import postRouter from "./routes/post.js";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import uploadRouter from "./routes/upload.js";
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.use(cookieParser());
 app.use("/api/users/", userRouter);
 app.use("/api/auth/", authRouter);
 app.use("/api/post/", postRouter);
+app.use("/api/upload/", uploadRouter);
 
 const portS = process.env.PORTS;
 app.listen(portS, () => {
