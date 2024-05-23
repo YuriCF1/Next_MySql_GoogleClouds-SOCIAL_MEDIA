@@ -6,6 +6,7 @@ import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import uploadRouter from "./routes/upload.js";
+import commentRouter from "./routes/comments.js";
 
 const app = express();
 
@@ -37,6 +38,7 @@ app.use("/api/users/", userRouter);
 app.use("/api/auth/", authRouter);
 app.use("/api/post/", postRouter);
 app.use("/api/upload/", uploadRouter);
+app.use("/api/comments/", commentRouter);
 
 const portS = process.env.PORTS;
 app.listen(portS, () => {
