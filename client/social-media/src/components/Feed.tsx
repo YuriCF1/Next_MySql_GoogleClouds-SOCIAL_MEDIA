@@ -23,7 +23,7 @@ const Feed = () => {
         <div className="flex flex-col items-center gap-5 w-full">
             <SharePhotos />
             {isLoading ? <span>Carregando...</span> :
-                <div className="w-full flex flex-col-reverse gap-5 items-center"> {data?.map((post, id) => {
+                <div className="w-full flex flex-col gap-5 items-center"> {data?.map((post, id) => {
                     return (
                         <Post post={post} key={id} />
                     )
