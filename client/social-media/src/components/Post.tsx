@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 
 import IUser from '../app/interfaces/IUser'
 import { IPost } from '../app/interfaces/IPost'
+import moment from 'moment'
+import "moment/locale/pt-br"
 
 const Post = (props: { post: IPost }) => {
     const [user, setUser] = useState<IUser | undefined>(undefined)
@@ -15,17 +17,14 @@ const Post = (props: { post: IPost }) => {
             setUser(JSON.parse(value))
         }
     }, [])
-
-    let date = new Date(created_at)
-    let formatedDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-
+    
     return (
         <div className='w-1/3 bg-zinc-100 rounded-lg p-4 shadow-2xl m-1'>
             <header className='flex gap-2 pb-4 border-b items-center'>
                 <img className="w-10 h-10 rounded-full" src={userImg ? userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'} alt="Imagem do usuário autor do poste" />
                 <div className='flex flex-col'>
                     <span className='font-semibold'>{username}</span>
-                    <span className='text-xs'>{formatedDate}</span>
+                    <span className='text-xs'>{moment(created_at).fromNow()}</span>
                 </div>
             </header>
             {post_desc && (
