@@ -1,3 +1,5 @@
+import Comment from './Comment'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useContext, useState } from 'react'
 import { UserContext } from '@/context/UserContext'
@@ -5,7 +7,7 @@ import { UserContext } from '@/context/UserContext'
 import { FaThumbsUp, FaRegComment, FaPaperPlane } from 'react-icons/fa'
 
 import { IPost } from '../app/interfaces/IPost'
-import IComments from '@/app/interfaces/IComents'
+import IComment from '@/app/interfaces/IComent'
 
 import moment from 'moment'
 import "moment/locale/pt-br"
@@ -18,12 +20,14 @@ const Post = (props: { post: IPost }) => {
 
     const [comment_desc, setComment_desc] = useState("")
 
+    const [showComment, setShowComment] = useState(false)
+
     /*
     React Query usa essa chave para armazenar e buscar dados no cache. Se você já buscou comentários para o post 1, esses dados serão armazenados sob a 
     chave ["comments", 1]. Ao fazer a mesma consulta novamente, os dados cacheados serão usados em vez de fazer uma nova requisição.
     */
 
-    const { data, error, isLoading } = useQuery<IComments[] | undefined>({
+    const { data, error, isLoading } = useQuery<IComment[] | undefined>({
         queryKey: ["comments", id],//Colocando o 'id' para fazer uma query diferente para cada post. Colocando id para dizer que tem uma KEY para cada post
         queryFn: () => makeRequest.get("comments/?post_id=" + id).then((res) => {
             return res.data.data
@@ -73,17 +77,23 @@ const Post = (props: { post: IPost }) => {
                     </button>
                     3
                 </div>
-                <span className='text-xl'>{data && data.length > 0 ? `${data.length} comentário${data.length > 1 ? "s" : ""}` : ""}</span>
+                <button onClick={() => {
+                    setShowComment(!showComment)
+                }} className='text-xl'>{data && data.length > 0 ? `${data.length} comentário${data.length > 1 ? "s" : ""}` : ""}</button>
             </div>
             <div className='flex justify-around py-4 text-gray-600 border-b'>
                 <button className='flex items-center gap-1'><FaThumbsUp />Curtir</button>
-                <button className='flex items-center gap-1'><FaRegComment /> Comentar</button>
+                <button onClick={() => document.getElementById("comment" + id)?.focus()} className='flex items-center gap-1'><FaRegComment /> Comentar</button>
             </div>
+            { }
+            {showComment && data?.map((commentData, id) => {
+                return <Comment comment={commentData} key={id} />
+            })}
             <div className='flex gap-2 pt-6'>
                 <img src={user?.userImg ? user.userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'}
                     alt="Imagem de pefil do usuário" className="w-12 h-12 rounded-full" />
                 <div className='w-full bg-zinc-100 flex items-center text-gray-600 px-3 py-1 rounded-full'>
-                    <input value={comment_desc} onChange={(e) => setComment_desc(e.target.value)} className='bg-zinc-100 w-full focus-visible:outline-none border-4 rounded-full px-3 mx-5' type="text" placeholder='O que você achou?' />
+                    <input value={comment_desc} onChange={(e) => setComment_desc(e.target.value)} className='bg-zinc-100 w-full focus-visible:outline-none border-4 rounded-full px-3 mx-5' type="text" id={"comment" + id} placeholder='O que você achou?' />
                     <button onClick={() => shareComment()}>
                         <FaPaperPlane />
                     </button>
