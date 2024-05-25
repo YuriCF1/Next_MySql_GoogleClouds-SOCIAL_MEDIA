@@ -10,7 +10,6 @@ import { makeRequest } from "../../axios";
 import { UserContext } from "@/context/UserContext";
 
 const header = () => {
-    // const [user, setUser] = useState({ username: '', userImg: '' });
     const { user, setUser } = useContext(UserContext)
     const [showMenu, setShowMenu] = useState(false);
     const router = useRouter();
