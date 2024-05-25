@@ -1,7 +1,7 @@
-export default interface IComments {
+export default interface IComment {
     id: number,
-    comment_deesc: string,
-    user_img: string,
+    comment_desc: string,
+    userImg: string,
     comment_user_id: number,
     username: string,
     post_id: number,
