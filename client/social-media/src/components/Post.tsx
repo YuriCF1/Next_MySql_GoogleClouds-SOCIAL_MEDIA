@@ -1,23 +1,57 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useContext, useState } from 'react'
+import { UserContext } from '@/context/UserContext'
+
 import { FaThumbsUp, FaRegComment, FaPaperPlane } from 'react-icons/fa'
 
-import { useEffect, useState } from 'react'
-
-import IUser from '../app/interfaces/IUser'
 import { IPost } from '../app/interfaces/IPost'
+import IComments from '@/app/interfaces/IComents'
+
 import moment from 'moment'
 import "moment/locale/pt-br"
+import { makeRequest } from '../../axios'
 
 const Post = (props: { post: IPost }) => {
-    const [user, setUser] = useState<IUser | undefined>(undefined)
-    const { post_desc, img, username, userImg, created_at } = props.post
+    const { post_desc, img, username, userImg, created_at, id } = props.post
+    const { user } = useContext(UserContext)
+    const queryCLient = useQueryClient()
 
-    useEffect(() => {
-        let value = localStorage.getItem('rede-social:user');
-        if (value) {
-            setUser(JSON.parse(value))
+    const [comment_desc, setComment_desc] = useState("")
+
+    /*
+    React Query usa essa chave para armazenar e buscar dados no cache. Se você já buscou comentários para o post 1, esses dados serão armazenados sob a 
+    chave ["comments", 1]. Ao fazer a mesma consulta novamente, os dados cacheados serão usados em vez de fazer uma nova requisição.
+    */
+
+    const { data, error, isLoading } = useQuery<IComments[] | undefined>({
+        queryKey: ["comments", id],//Colocando o 'id' para fazer uma query diferente para cada post. Colocando id para dizer que tem uma KEY para cada post
+        queryFn: () => makeRequest.get("comments/?post_id=" + id).then((res) => {
+            return res.data.data
+        }),
+        enabled: !!id //Só ativa a query quando tiver o parâmetro id
+    })
+
+    if (error) {
+        console.log(error);
+    }
+
+    const mutation = useMutation({
+        mutationFn: async (newComment: {}) => {
+            await makeRequest.post("comments/", newComment).then((res) => {
+                return res.data
+            })
+        },
+        onSuccess: () => {
+            //Fazendo o reset da queryKey, para toda vez que fiver um comentário novo, ele refaz a query
+            queryCLient.invalidateQueries({ queryKey: ["comments", id] })
         }
-    }, [])
-    
+    })
+
+    const shareComment = async () => {
+        mutation.mutate({ comment_desc, comment_user_id: user?.id, post_id: id })
+        setComment_desc('')
+    }
+
     return (
         <div className='w-1/3 bg-zinc-100 rounded-lg p-4 shadow-2xl m-1'>
             <header className='flex gap-2 pb-4 border-b items-center'>
@@ -39,7 +73,7 @@ const Post = (props: { post: IPost }) => {
                     </button>
                     3
                 </div>
-                <span>5 comentários</span>
+                <span className='text-xl'>{data && data.length > 0 ? `${data.length} comentário${data.length > 1 ? "s" : ""}` : ""}</span>
             </div>
             <div className='flex justify-around py-4 text-gray-600 border-b'>
                 <button className='flex items-center gap-1'><FaThumbsUp />Curtir</button>
@@ -49,8 +83,8 @@ const Post = (props: { post: IPost }) => {
                 <img src={user?.userImg ? user.userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'}
                     alt="Imagem de pefil do usuário" className="w-12 h-12 rounded-full" />
                 <div className='w-full bg-zinc-100 flex items-center text-gray-600 px-3 py-1 rounded-full'>
-                    <input className='bg-zinc-100 w-full focus-visible:outline-none border-4 rounded-full px-3 mx-5' type="text" />
-                    <button>
+                    <input value={comment_desc} onChange={(e) => setComment_desc(e.target.value)} className='bg-zinc-100 w-full focus-visible:outline-none border-4 rounded-full px-3 mx-5' type="text" placeholder='O que você achou?' />
+                    <button onClick={() => shareComment()}>
                         <FaPaperPlane />
                     </button>
                 </div>
