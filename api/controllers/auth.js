@@ -200,8 +200,8 @@ export const logout = (req, res) => {
   sameSite: "none": Indica que o cookie deve ser enviado em solicitações cross-site, útil para contextos onde o servidor e o cliente estão em domínios diferentes.
   */
   return res
-    .clearCoookie("accessToken", { secure: true, sameSite: "none" })
-    .clearCoookie("refreshToken", { secure: true, sameSite: "none" })
+    .clearCookie("accessToken", { secure: true, sameSite: "none" })
+    .clearCookie("refreshToken", { secure: true, sameSite: "none" })
     .status(200)
     .json({ msg: "Logout efetuado com sucesso" });
 };
