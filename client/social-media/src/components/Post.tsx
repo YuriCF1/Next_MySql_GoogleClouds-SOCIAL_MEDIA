@@ -10,16 +10,19 @@ import { IPost } from '../app/interfaces/IPost'
 import IComment from '@/app/interfaces/IComent'
 
 import moment from 'moment'
-import "moment/locale/pt-br"
+// import "moment/locale/pt-br"
 import { makeRequest } from '../../axios'
+import ILike from '@/app/interfaces/ILike'
 
 const Post = (props: { post: IPost }) => {
     const { post_desc, img, username, userImg, created_at, id } = props.post
     const { user } = useContext(UserContext)
     const queryCLient = useQueryClient()
 
-    const [comment_desc, setComment_desc] = useState("")
+    const [liked, setLIked] = useState(false)
+    const [showWhoLiked, setShowWhoLIked] = useState(false)
 
+    const [comment_desc, setComment_desc] = useState("")
     const [showComment, setShowComment] = useState(false)
 
     /*
@@ -27,7 +30,60 @@ const Post = (props: { post: IPost }) => {
     chave ["comments", 1]. Ao fazer a mesma consulta novamente, os dados cacheados serão usados em vez de fazer uma nova requisição.
     */
 
-    const { data, error, isLoading } = useQuery<IComment[] | undefined>({
+    //_______________________________________LIKES: QUERY | MUTATION_______________________________________
+    const likesQuery = useQuery<ILike[] | undefined>({
+        queryKey: ["likes", id],//Colocando o 'id' para fazer uma query diferente para cada post. Colocando id para dizer que tem uma KEY para cada post
+        queryFn: () => makeRequest.get("likes/?likes_post_id=" + id).then((res) => {
+            res.data.data.map((like: ILike) => {
+                console.log("QUERY:", res.data.data);
+                if (like.likes_user_id === user?.id) { //Checando se o usuário vendo o post, deu like ou não
+                    return setLIked(true)
+                } else {
+                    setLIked(false)
+                }
+            })
+            return res.data.data
+        }),
+        enabled: !!id //Só ativa a query quando tiver o parâmetro id
+    })
+
+    if (likesQuery.error) {
+        console.log(likesQuery.error);
+    }
+
+    const LikesMutation = useMutation({
+        mutationFn: async (newLike: {}) => {
+            if (liked) {
+                await makeRequest.delete(`likes/?likes_post_id=${id}&likes_user_id=${user?.id}`, newLike).then((res) => {
+                    setLIked(false)
+                    return res.data.data
+
+                })
+            } else {
+                await makeRequest.post("likes/", newLike).then((res) => {
+                    setLIked(true)
+                    return res.data.data
+                })
+            }
+        },
+        onSuccess: () => {
+            //Fazendo o reset da queryKey, para toda vez que fiver um comentário novo, ele refaz a query
+            queryCLient.invalidateQueries({ queryKey: ["likes", id] })
+        }
+    })
+
+    const addLike = async () => {
+        LikesMutation.mutate({
+            likes_user_id:
+                user?.id,
+            likes_post_id: id
+        })
+    }
+
+
+    //_______________________________________COMENTÁRIO: QUERY | MUTATION_______________________________________
+    // const { data, error, isLoading } = useQuery<IComment[] | undefined>({
+    const commentQuery = useQuery<IComment[] | undefined>({
         queryKey: ["comments", id],//Colocando o 'id' para fazer uma query diferente para cada post. Colocando id para dizer que tem uma KEY para cada post
         queryFn: () => makeRequest.get("comments/?post_id=" + id).then((res) => {
             return res.data.data
@@ -35,11 +91,11 @@ const Post = (props: { post: IPost }) => {
         enabled: !!id //Só ativa a query quando tiver o parâmetro id
     })
 
-    if (error) {
-        console.log(error);
+    if (commentQuery.error) {
+        console.log(commentQuery.error);
     }
 
-    const mutation = useMutation({
+    const Coomentsmutation = useMutation({
         mutationFn: async (newComment: {}) => {
             await makeRequest.post("comments/", newComment).then((res) => {
                 return res.data
@@ -52,7 +108,7 @@ const Post = (props: { post: IPost }) => {
     })
 
     const shareComment = async () => {
-        mutation.mutate({ comment_desc, comment_user_id: user?.id, post_id: id })
+        Coomentsmutation.mutate({ comment_desc, comment_user_id: user?.id, post_id: id })
         setComment_desc('')
     }
 
@@ -70,23 +126,46 @@ const Post = (props: { post: IPost }) => {
                     <span>{post_desc}</span>
                 </div>)}
             {img && <img className='rounded-lg' src={`./upload/${img}`} alt="Imagem do post" />}
-            <div className='flex justify-between py-4 border-b'>
-                <div className='flex gap-1 items-center'>
-                    <button className='bg-blue-500 text-white w-8 h-8 p-2 items-center flex justify-center rounded-full text-2xl'>
-                        <FaThumbsUp />
+            <div className='border-b'>
+                <div className='flex justify-between py-4 h-16'>
+                    <div
+                        className='relative'
+                        onMouseEnter={() => setShowWhoLIked(true)}
+                        onMouseLeave={() => setShowWhoLIked(false)}>
+                        {likesQuery.data && likesQuery.data.length > 0 && (
+                            <>
+                                <div className='flex gap-1 items-center'>
+                                    <span className='bg-blue-500 text-white w-8 h-8 p-2 items-center flex justify-center rounded-full text-2xl'>
+                                        <FaThumbsUp />
+                                    </span>
+                                    <span className='text-2xl'>{likesQuery.data.length}</span>
+                                </div>
+                                {showWhoLiked && (
+                                    <div className='absoulute bg-white border flex flex-col p-2 rounded-md top-10'>
+                                        {likesQuery.data.map((like) => {
+                                            return <span key={like.id}>{like.username}</span>
+                                        })}
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                    <button
+                        onClick={() => {
+                            setShowComment(!showComment)
+                        }} className='text-2xl'>{commentQuery.data && commentQuery.data.length > 0 ? `${commentQuery.data.length} comentário${commentQuery.data.length > 1 ? "s" : ""}` : ""}
                     </button>
-                    3
                 </div>
-                <button onClick={() => {
-                    setShowComment(!showComment)
-                }} className='text-xl'>{data && data.length > 0 ? `${data.length} comentário${data.length > 1 ? "s" : ""}` : ""}</button>
             </div>
             <div className='flex justify-around py-4 text-gray-600 border-b'>
-                <button className='flex items-center gap-1'><FaThumbsUp />Curtir</button>
+                <button
+                    className={`flex items-center gap-1 ${liked ? "text-blue-600" : " "}`}
+                    onClick={() => addLike()}
+                >
+                    <FaThumbsUp className=' mr-1' />Curtir</button>
                 <button onClick={() => document.getElementById("comment" + id)?.focus()} className='flex items-center gap-1'><FaRegComment /> Comentar</button>
             </div>
-            { }
-            {showComment && data?.map((commentData, id) => {
+            {showComment && commentQuery.data?.map((commentData, id) => {
                 return <Comment comment={commentData} key={id} />
             })}
             <div className='flex gap-2 pt-6'>
