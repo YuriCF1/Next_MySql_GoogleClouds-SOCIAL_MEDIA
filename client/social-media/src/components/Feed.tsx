@@ -1,35 +1,17 @@
-import { useEffect, useState } from "react"
+"use client"
+/*NOTA: Usar 'use client' impede o erro: Error: (0 , _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useQuery) is not a function. Pois ele nem considera a possibilidade de ser uma função dinãmica*/
 import Post from "./Post"
 import { IPost } from "../app/interfaces/IPost";
-import { makeRequest } from "../../axios";
-import SharePhotos from "./SharePhotos";
-import { useQuery } from "@tanstack/react-query";
 
-const Feed = () => {
-
-    const { data, isLoading, error } = useQuery<IPost[] | undefined>({
-        queryKey: ["posts"],
-        queryFn: () =>
-            makeRequest.get("/post/").then((res) => {
-                return res.data.data
-            })
-    })
-
-    if (error) {
-        console.log(error);
-    }
-
+const Feed = (props: { post: IPost[] | undefined }) => {
     return (
         <div className="flex flex-col items-center gap-5 w-full">
-            <SharePhotos />
-            {isLoading ? <span>Carregando...</span> :
-                <div className="w-full flex flex-col gap-5 items-center"> {data?.map((post, id) => {
-                    return (
-                        <Post post={post} key={id} />
-                    )
-                })}
-                </div>
-            }
+            <div className="w-full flex flex-col gap-5 items-center"> {props.post?.map((post, id) => {
+                return (
+                    <Post post={post} key={id} />
+                )
+            })}
+            </div>
         </div>
     )
 }
