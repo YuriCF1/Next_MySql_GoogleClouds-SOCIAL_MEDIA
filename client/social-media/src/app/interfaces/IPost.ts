@@ -4,5 +4,6 @@ export interface IPost {
     img: string,
     username: string,
     userImg: string,
-    created_at: string
+    created_at: string,
+    userId: string
 }
