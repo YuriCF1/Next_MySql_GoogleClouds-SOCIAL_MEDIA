@@ -1,3 +1,6 @@
+"use client"
+import Link from 'next/link'
+
 import Comment from './Comment'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -8,14 +11,14 @@ import { FaThumbsUp, FaRegComment, FaPaperPlane } from 'react-icons/fa'
 
 import { IPost } from '../app/interfaces/IPost'
 import IComment from '@/app/interfaces/IComent'
+import ILike from '@/app/interfaces/ILike'
 
 import moment from 'moment'
 // import "moment/locale/pt-br"
 import { makeRequest } from '../../axios'
-import ILike from '@/app/interfaces/ILike'
 
 const Post = (props: { post: IPost }) => {
-    const { post_desc, img, username, userImg, created_at, id } = props.post
+    const { post_desc, img, username, userImg, created_at, id, userId } = props.post
     const { user } = useContext(UserContext)
     const queryCLient = useQueryClient()
 
@@ -112,12 +115,16 @@ const Post = (props: { post: IPost }) => {
         setComment_desc('')
     }
 
+    const imgSrc = img && img.includes("://") ? img : `./upload/${img}`
+
     return (
-        <div className='w-1/3 bg-zinc-100 rounded-lg p-4 shadow-2xl m-1'>
+        <div className='w-full bg-zinc-100 rounded-lg p-4 shadow-2xl m-1'>
             <header className='flex gap-2 pb-4 border-b items-center'>
-                <img className="w-10 h-10 rounded-full" src={userImg ? userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'} alt="Imagem do usuário autor do poste" />
+                <Link href={`profile/?id=${userId}`}>
+                    <img className="w-10 h-10 rounded-full" src={userImg ? userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'} alt="Imagem do usuário autor do poste" />
+                </Link>
                 <div className='flex flex-col'>
-                    <span className='font-semibold'>{username}</span>
+                    <Link href={`profile/?id=${userId}`}>  <span className='font-semibold'>{username}</span></Link>
                     <span className='text-xs'>{moment(created_at).fromNow()}</span>
                 </div>
             </header>
@@ -125,7 +132,7 @@ const Post = (props: { post: IPost }) => {
                 <div className='py-4 w-full'>
                     <span>{post_desc}</span>
                 </div>)}
-            {img && <img className='rounded-lg' src={`./upload/${img}`} alt="Imagem do post" />}
+            {img && <img className='rounded-lg' src={imgSrc} alt="Imagem do post" />}
             <div className='border-b'>
                 <div className='flex justify-between py-4 h-16'>
                     <div
