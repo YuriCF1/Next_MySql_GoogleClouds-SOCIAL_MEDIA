@@ -13,7 +13,7 @@ const SideBar = () => {
     return (
         <aside className="pl-4">
             <nav className="flex flex-col gap-6 text-gray-600 font-semibold bg-white">
-                <Link className="flex gap-2 pb-6 items-center" href={''}><img src="" alt="" />
+                <Link className="flex gap-2 pb-6 items-center" href={`/profile?id=${user?.id}`}><img src="" alt="" />
                     <img src={user?.userImg ? user.userImg : 'https://i0.wp.com/digitalhealthskills.com/wp-content/uploads/2022/11/3da39-no-user-image-icon-27.png?fit=500%2C500&ssl=1'}
                         alt="Imagem de pefil do usuário" className="w-12 h-12 rounded-full" />
                     <span>{user?.username}</span>

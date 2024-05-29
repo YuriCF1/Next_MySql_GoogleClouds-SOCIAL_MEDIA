@@ -26,7 +26,7 @@ const Login = () => {
     makeRequest
       .post('auth/login', { email, password })
       .then((res) => {
-        router.push('/')
+        router.push('/main')
         localStorage.setItem('rede-social:user', JSON.stringify(res.data.user))
         setSuccess(res.data.msg);
         setError('')
