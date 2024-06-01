@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 import uploadRouter from "./routes/upload.js";
 import commentRouter from "./routes/comments.js";
 import likesRouter from "./routes/likes.js";
+import friendshipRouter from "./routes/friendship.js";
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/post/", postRouter);
 app.use("/api/upload/", uploadRouter);
 app.use("/api/comments/", commentRouter);
 app.use("/api/likes/", likesRouter);
+app.use("/api/friendship/", friendshipRouter);
 
 const portS = process.env.PORTS;
 app.listen(portS, () => {
