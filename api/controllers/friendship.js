@@ -37,7 +37,7 @@ export const getFriendship = (req, res) => {
 };
 
 export const deleteFriendship = (req, res) => {
-  const { fallower_id, fallowed_id } = req.body;
+  const { fallower_id, fallowed_id } = req.query;
   db.query(
     "DELETE FROM friendship WHERE `fallower_id` = ? AND `fallowed_id` = ?",
     [fallower_id, fallowed_id],
