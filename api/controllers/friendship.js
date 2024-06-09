@@ -2,7 +2,6 @@ import { db } from "../connect.js";
 
 export const addFriendship = (req, res) => {
   const { fallower_id, fallowed_id } = req.body;
-
   db.query(
     "INSERT INTO friendship SET ? ",
     { fallower_id, fallowed_id },
@@ -21,10 +20,9 @@ export const addFriendship = (req, res) => {
 };
 
 export const getFriendship = (req, res) => {
-  const { fallower_id, fallowed_id } = req.body;
   db.query(
-    "SELECT f.*, u.username, u.userImg FROM friendship AS f JOIN user AS u ON (u.id = f.fallowed_id) WHERE fallowed_id = ?",
-    [req.query.fallowed_id],
+    "SELECT f.*, u.username, u.userImg FROM friendship AS f JOIN user AS u ON (u.id = fallowed_id) WHERE fallower_id = ?",
+    [req.query.fallower_id],
     (error, data) => {
       if (error) {
         console.log(error);
