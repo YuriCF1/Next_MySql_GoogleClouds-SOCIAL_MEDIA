@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { makeRequest } from "@/../../axios";
 import SideBar from "@/components/SideBar";
 import Header from "@/components/Header";
+import FriendshipTable from "@/components/FriendshipTable";
 
 export default function MainHome({ children }: { children: ReactNode }) {
     const router = useRouter()
@@ -34,9 +35,10 @@ export default function MainHome({ children }: { children: ReactNode }) {
             <Header />
             <div className="w-full flex justify-start pt-10">
                 <SideBar />
-                <div className="w-full justify-center flex">
+                <div className="w-4/6 justify-center flex">
                     {children}
                 </div>
+                <FriendshipTable />
             </div>
         </main>
     );
