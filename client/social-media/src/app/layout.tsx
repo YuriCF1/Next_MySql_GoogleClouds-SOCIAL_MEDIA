@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
 
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <body className={inter.className}>
         <ClientProviders>
           <UserContextProvider>

@@ -38,7 +38,6 @@ const Post = (props: { post: IPost }) => {
         queryKey: ["likes", id],//Colocando o 'id' para fazer uma query diferente para cada post. Colocando id para dizer que tem uma KEY para cada post
         queryFn: () => makeRequest.get("likes/?likes_post_id=" + id).then((res) => {
             res.data.data.map((like: ILike) => {
-                console.log("QUERY:", res.data.data);
                 if (like.likes_user_id === user?.id) { //Checando se o usuário vendo o post, deu like ou não
                     return setLIked(true)
                 } else {
