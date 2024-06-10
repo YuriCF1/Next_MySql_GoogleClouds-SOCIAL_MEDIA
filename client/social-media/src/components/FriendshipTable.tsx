@@ -15,6 +15,10 @@ const FriendshipTable = () => {
         queryFn: () => makeRequest.get('/friendship/?fallower_id=' + user?.id)
             .then((res) => res.data.data),
         enabled: !!user?.id
+        /*
+        O primeiro ! converte o valor em seu oposto booleano. Por exemplo, se user?.id for undefined ou null, !user?.id será true.
+        O segundo ! reverte o valor de volta ao seu valor booleano original: !!user?.id será false se user?.id for undefined, null ou 0, e true para qualquer outro valor.
+        */
     })
 
     if (error) {
@@ -34,7 +38,7 @@ const FriendshipTable = () => {
     })
 
     return (
-        <div className="w-1/6 mr-4 text-gray-600 flex flex-col gap-4">
+        <div className=" fixed w-1/6 mr-4 text-gray-600 flex flex-col gap-4 right-0">
             <span className="font-bold border-b-4 text-center">Seguindo</span>
             {data?.map((friend: IFriendship) => (
                 <div key={friend.id} className="flex gap-2 items-center jsutify-between">
