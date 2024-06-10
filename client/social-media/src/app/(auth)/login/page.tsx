@@ -55,7 +55,7 @@ const Login = () => {
       <h1 className='font-bold text-2x text-gray-700 text-2xl font-mono'>Login</h1>
       <AuthInput label='Email' newState={setEmail}></AuthInput>
       <AuthInput label='Senha' newState={setPassword} isPassword autoComplete={false}></AuthInput>
-      <AuthButton texto="Registrar" isFormValid={isFormValid} handleFunction={handleLogin} />
+      <AuthButton texto="Entrar" isFormValid={isFormValid} handleFunction={handleLogin} />
       <div className='text-center underline text-blue-500 mt-2 text-sm sm:text-blue-100'>
         <Link href="/register">Cadastrar-se</Link>
       </div>
