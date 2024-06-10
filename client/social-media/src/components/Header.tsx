@@ -28,7 +28,7 @@ const header = () => {
     })
 
     return (
-        <header className="w-full bg-white flex justify-between py-2 px-4 items-center shadow-md h-16">
+        <header className="fixed z-10 w-full bg-white flex justify-between py-2 px-4 items-center shadow-md h-16">
             <Link className="font-bold text-sky-900 text-lg" href='/main'>DevPics</Link>
             <div className="flex bg-zinc-100 items-center text-gray-600 px-3 py-1 rounded-full">
                 <input className="bg-zinc-100 focus:outline-none" placeholder="Pesquisar" type="text" />
