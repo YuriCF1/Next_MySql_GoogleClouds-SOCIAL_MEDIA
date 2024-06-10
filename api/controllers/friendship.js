@@ -3,9 +3,8 @@ import { db } from "../connect.js";
 export const addFriendship = (req, res) => {
   const { fallower_id, fallowed_id } = req.body;
   db.query(
-    "INSERT INTO friendship SET ? ",
+    "INSERT INTO friendship SET ?",
     { fallower_id, fallowed_id },
-
     (error) => {
       if (error) {
         console.log(error);
