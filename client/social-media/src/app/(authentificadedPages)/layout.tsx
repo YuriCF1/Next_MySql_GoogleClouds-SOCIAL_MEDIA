@@ -33,9 +33,9 @@ export default function MainHome({ children }: { children: ReactNode }) {
     return (
         <main className="flex flex-col items-center justify-between bg-white">
             <Header />
-            <div className="w-full flex justify-start pt-10">
+            <div className="w-full flex justify-start pt-20">
                 <SideBar />
-                <div className="w-4/6 justify-center flex">
+                <div className="w-full justify-center flex pb-10">
                     {children}
                 </div>
                 <FriendshipTable />
