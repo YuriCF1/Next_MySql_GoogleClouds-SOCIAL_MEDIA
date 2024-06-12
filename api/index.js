@@ -9,6 +9,7 @@ import uploadRouter from "./routes/upload.js";
 import commentRouter from "./routes/comments.js";
 import likesRouter from "./routes/likes.js";
 import friendshipRouter from "./routes/friendship.js";
+import searcHRouter from "./routes/search.js"
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api/upload/", uploadRouter);
 app.use("/api/comments/", commentRouter);
 app.use("/api/likes/", likesRouter);
 app.use("/api/friendship/", friendshipRouter);
+app.use("/api/search/", searcHRouter)
 
 const portS = process.env.PORTS;
 app.listen(portS, () => {
