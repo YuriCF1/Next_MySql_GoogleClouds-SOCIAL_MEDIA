@@ -159,7 +159,7 @@ const Post = (props: { post: IPost }) => {
                     <button
                         onClick={() => {
                             setShowComment(!showComment)
-                        }} className='text-2xl'>{commentQuery.data && commentQuery.data.length > 0 ? `${commentQuery.data.length} comentário${commentQuery.data.length > 1 ? "s" : ""}` : ""}
+                        }} className='text-[125%]'>{commentQuery.data && commentQuery.data.length > 0 ? `${commentQuery.data.length} comentário${commentQuery.data.length > 1 ? "s" : ""}` : ""}
                     </button>
                 </div>
             </div>
