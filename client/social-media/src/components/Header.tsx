@@ -32,7 +32,7 @@ const header = () => {
     })
 
     const { data, error } = useQuery({
-        queryKey: ['search'],
+        queryKey: ['search', search],
         queryFn: async () => {
             console.log('Search', search);
             const res = await makeRequest.get('search/search-users?params=' + search);
@@ -66,7 +66,7 @@ const header = () => {
                             )
                         })
                         }
-                        <Link href={"search?params=" + search} className="font-semibold border-t border-zinc-700 text-center pt-2"></Link>
+                        <Link href={"/search?params=" + search} className="font-semibold border-t border-zinc-700 text-center pt-2">Ver todos os resultados</Link>
                     </div>
                 }
             </div>
