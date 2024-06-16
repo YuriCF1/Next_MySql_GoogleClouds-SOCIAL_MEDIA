@@ -1,15 +1,18 @@
 import express from "express";
-import userRouter from "./routes/user.js";
-import authRouter from "./routes/auth.js";
-import postRouter from "./routes/post.js";
+
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+
+import userRouter from "./routes/user.js";
+import authRouter from "./routes/auth.js";
+import postRouter from "./routes/post.js";
+import searcHRouter from "./routes/search.js"
 import uploadRouter from "./routes/upload.js";
 import commentRouter from "./routes/comments.js";
 import likesRouter from "./routes/likes.js";
 import friendshipRouter from "./routes/friendship.js";
-import searcHRouter from "./routes/search.js"
+
 
 const app = express();
 
