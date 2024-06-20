@@ -10,7 +10,7 @@ import { makeRequest } from "../../axios";
 import { UserContext } from "@/context/UserContext";
 import IUser from "@/app/interfaces/IUser";
 
-const header = () => {
+const Header = () => {
     const { user, setUser } = useContext(UserContext)
     const [showMenu, setShowMenu] = useState(false);
     const router = useRouter();
@@ -100,4 +100,4 @@ const header = () => {
     )
 }
 
-export default header
+export default Header
