@@ -1,7 +1,7 @@
 import IComment from "@/app/interfaces/IComent"
 
 import moment from "moment"
-import "moment/locale/pt-BR"
+// import "moment/locale/pt-BR"
 
 const Comment = (props: { comment: IComment }) => {
     const { comment_desc, userImg, username, created_at } = props.comment
