@@ -19,7 +19,7 @@ app.use(express.json());
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "https://your-vercel-app-url.vercel.app", // Adicione aqui o domínio da sua aplicação na Vercel
+    "https://next-my-sql-57iw.vercel.app/", 
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE"],
