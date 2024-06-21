@@ -10,8 +10,8 @@ import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 
 const Login = () => {
-  const [email, setEmail] = useState('teste@email.com')
-  const [password, setPassword] = useState('teste')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const [isFormValid, setIsFormValid] = useState(false)
 
   const [error, setError] = useState('');
