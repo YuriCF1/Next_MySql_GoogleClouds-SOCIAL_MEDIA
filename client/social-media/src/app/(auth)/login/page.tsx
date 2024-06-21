@@ -26,13 +26,14 @@ const Login = () => {
     makeRequest
       .post('auth/login', { email, password })
       .then((res) => {
+        console.log('RES LOGIN', res);
         router.push('/main')
         localStorage.setItem('rede-social:user', JSON.stringify(res.data.user))
         setSuccess(res.data.msg);
         setError('')
         setUser(res.data.user)
       }).catch((err) => {
-        console.log(err);
+        console.log('CATH ERRO LOGIN', err);
         setError(err.response.data.msg)
         setSuccess('');
       })
