@@ -21,7 +21,7 @@ const Register = () => {
     const handleRegister = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         //Pegando URL base de um arquivo externo 
-        makeRequest.post('uth/register', { username, email, password, confirmPassword })
+        makeRequest.post('auth/register', { username, email, password, confirmPassword })
             .then((res) => {
                 console.log(res.data)
                 setSuccess('Usuário registrado com sucesso!');
