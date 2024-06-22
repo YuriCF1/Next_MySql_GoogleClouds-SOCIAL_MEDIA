@@ -127,8 +127,18 @@ options: Opções adicionais para o cookie.
           );
           delete user.password;
           res
-            .cookie("accessToken", token, { httpOnly: true })
-            .cookie("refreshToken", refreshToken, { httpOnly: true })
+            .cookie("accessToken", token, {
+              httpOnly: true,
+              secure: true, // Garante que o cookie só seja enviado por HTTPS
+              sameSite: "None", // Permite o envio do cookie em solicitações cross-site
+              // maxAge: 3600000, // Define o tempo de expiração do cookie em milissegundos (1 hora)
+            })
+            .cookie("refreshToken", refreshToken, {
+              httpOnly: true,
+              secure: true, // Garante que o cookie só seja enviado por HTTPS
+              sameSite: "None", // Permite o envio do cookie em solicitações cross-site
+              // maxAge: 3600000, // Define o tempo de expiração do cookie em milissegundos (1 hora)
+            })
             .status(200)
             .json({
               msg: "Usuário logado com sucesso!",
