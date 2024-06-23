@@ -8,7 +8,7 @@ import { useContext, useState } from 'react'
 import { UserContext } from '@/context/UserContext'
 import IFriendship from '@/app/interfaces/IFriendship'
 
-import { FaTimesCircle } from "react-icons/fa" //fa = font-awesome
+import { FaTimesCircle } from "react-icons/fa"
 import AuthInput from '@/components/AuthInput'
 import IUser from '@/app/interfaces/IUser'
 
@@ -29,6 +29,9 @@ const ProfilePage = ({ searchParams }: { searchParams: { id: string } }) => { //
         queryKey: ["profile", searchParams.id], //Diferenciando cada proefile pelos id's do usuário
         queryFn: () => makeRequest.get("users/get-user?id=" + searchParams.id)
             .then((res) => {
+                setUsername(res.data[0].username)
+                setBgImg(res.data[0].bgImg)
+                setUserImg(res.data[0].userImg)
                 return res.data[0]
             })
     })
@@ -133,7 +136,7 @@ const ProfilePage = ({ searchParams }: { searchParams: { id: string } }) => { //
                                     'w-1/2 py-2 font-semibold rounded-md bg-zinc-400 hover:text-black'
                                     : 'bg-green-600 text-white hover:bg-green700'}`}>{fallowedState ? 'Deixar de seguir' : 'Seguir'}</button>
                         :
-                        <button onClick={() => { setEditProfile(true)}} className='w-56 py-2 font-semibold rounded-md ml-48 bg-zinc-400 hover:text-black'>
+                        <button onClick={() => { setEditProfile(true) }} className='w-56 py-2 font-semibold rounded-md ml-48 bg-zinc-400 hover:text-black'>
                             Editar perfil
                         </button>
                     }
@@ -148,8 +151,8 @@ const ProfilePage = ({ searchParams }: { searchParams: { id: string } }) => { //
                         </header>
                         <form className='w-2/3 py-8 flex flex-col gap-8'>
                             <AuthInput label='Nome:' newState={setUsername} value={username}></AuthInput>
-                            <AuthInput label='Imagem de fundo' newState={setBgImg} autoComplete={false} value={bgImg}></AuthInput>
-                            <AuthInput label='Imagem do perfil' newState={setUserImg} autoComplete={false} value={userImg}></AuthInput>
+                            <AuthInput label='Link da imagem de fundo' newState={setBgImg} autoComplete={false} value={bgImg}></AuthInput>
+                            <AuthInput label='Link da imagem do perfil' newState={setUserImg} autoComplete={false} value={userImg}></AuthInput>
                         </form>
                         <button
                             onClick={(e) => {
