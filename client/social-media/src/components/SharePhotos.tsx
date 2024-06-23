@@ -4,7 +4,6 @@ import { UserContext } from "@/context/UserContext"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useContext, useMemo, useState } from "react"
 import { FaPaperPlane, FaUserFriends } from "react-icons/fa"
-import { TbPhoto } from "react-icons/tb"
 import { makeRequest } from "../../axios"
 
 const SharePhotos = () => {
@@ -63,14 +62,15 @@ const SharePhotos = () => {
                     <input
                         value={post_desc}
                         onChange={(e) => setDesc(e.target.value)}
-                        className='bg-zinc-100 w-full focus-visible:outline-none border-4 rounded-full px-3 mx-5' type="text"
+                        className='bg-zinc-100 w-full focus-visible:outline-none border-4 rounded-full px-3 mx-5' type="text-area"
                         placeholder={`Compartilhe seus momentos, ${user?.username}!`} />
                     <button>
                         <FaPaperPlane onClick={() => sharePost()} />
                     </button>
                 </div>
             </div>
-            <div className='flex justify-around py-4 text-gray-600 border-y'>
+            {/* POSTAR IMAGEM E MARCAR AMIGO! */}
+            {/* <div className='flex justify-around py-4 text-gray-600 border-y'>
                 <div>
                     <input onChange={(e) => setImg(e.target.files && e.target.files[0])} className='hidden' type="file" id="img" />
                     <label htmlFor="img" className="flex cursor-pointer">
@@ -79,7 +79,7 @@ const SharePhotos = () => {
                     </label>
                 </div>
                 <button className='flex items-center gap-1'><FaUserFriends className="text-2xl" /> Marcar amigo</button>
-            </div>
+            </div> */}
         </div>
     )
 }
