@@ -22,7 +22,7 @@ const Post = (props: { post: IPost }) => {
     const { user } = useContext(UserContext)
     const queryCLient = useQueryClient()
 
-    const [liked, setLIked] = useState(false)
+    const [liked, setLiked] = useState(false)
     const [showWhoLiked, setShowWhoLIked] = useState(false)
 
     const [comment_desc, setComment_desc] = useState("")
@@ -35,19 +35,16 @@ const Post = (props: { post: IPost }) => {
 
     //_______________________________________LIKES: QUERY | MUTATION_______________________________________
     const likesQuery = useQuery<ILike[] | undefined>({
-        queryKey: ["likes", id],//Colocando o 'id' para fazer uma query diferente para cada post. Colocando id para dizer que tem uma KEY para cada post
+        queryKey: ["likes", id], // Colocando o 'id' para fazer uma query diferente para cada post.
         queryFn: () => makeRequest.get("likes/?likes_post_id=" + id).then((res) => {
-            res.data.data.map((like: ILike) => {
-                if (like.likes_user_id === user?.id) { //Checando se o usuário vendo o post, deu like ou não
-                    return setLIked(true)
-                } else {
-                    setLIked(false)
-                }
-            })
-            return res.data.data
+            const likes = res.data.data
+            const userLiked = likes.some((like: ILike) => like.likes_user_id === user?.id)
+            setLiked(userLiked)
+            return likes
         }),
-        enabled: !!id //Só ativa a query quando tiver o parâmetro id
+        enabled: !!id // Só ativa a query quando tiver o parâmetro id
     })
+
 
     if (likesQuery.error) {
         console.log(likesQuery.error);
@@ -57,13 +54,13 @@ const Post = (props: { post: IPost }) => {
         mutationFn: async (newLike: {}) => {
             if (liked) {
                 await makeRequest.delete(`likes/?likes_post_id=${id}&likes_user_id=${user?.id}`, newLike).then((res) => {
-                    setLIked(false)
+                    setLiked(false)
                     return res.data.data
 
                 })
             } else {
                 await makeRequest.post("likes/", newLike).then((res) => {
-                    setLIked(true)
+                    setLiked(true)
                     return res.data.data
                 })
             }
