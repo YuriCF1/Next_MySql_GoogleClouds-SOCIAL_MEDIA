@@ -11,8 +11,8 @@ import { UserContext } from '@/context/UserContext';
 import TestUser from '@/components/TestUser';
 
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('user@test.com')
+  const [password, setPassword] = useState('123456')
   const [isFormValid, setIsFormValid] = useState(false)
 
   const [error, setError] = useState('');
@@ -22,8 +22,13 @@ const Login = () => {
 
   const { setUser } = useContext(UserContext)
 
-  const handleLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
+  const handleLogin = (e?: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('Login');
+    console.log(email);
+    console.log(password);
+    if (e) {
+      e.preventDefault();
+    }
     makeRequest
       .post('auth/login', { email, password })
       .then((res) => {
@@ -38,6 +43,11 @@ const Login = () => {
         setError(err.response.data.msg)
         setSuccess('');
       })
+  }
+
+  const testLogin = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    handleLogin()
   }
 
   useEffect(() => {
@@ -61,6 +71,7 @@ const Login = () => {
       </div>
       {error && <span className="text-red-700 mt-2">* {error}</span>}
       {success && <span className="text-green-700 mt-2">* {success}</span>}
+      <button onClick={testLogin} className='bg-green-400 py-1 font-bold text-white rounded-lg hover:bg-green-800 mt-2 w-full'>Login with Test User</button>
       <TestUser />
     </>
   );
