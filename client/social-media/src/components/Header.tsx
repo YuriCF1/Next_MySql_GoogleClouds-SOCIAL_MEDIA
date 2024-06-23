@@ -89,7 +89,7 @@ const Header = () => {
                     </button>
                     {showMenu &&
                         <div className="absolute flex flex-col bg-white p-4 shadow-md rounded-md gap-2 border-t whitespace-nowrap right-[-15px]">
-                            <Link className="border-b border-stone-200" href={''}>Editar perfil</Link>
+                            <Link className="border-b border-stone-200" href={'/profile?id=' + user?.id}>Editar perfil</Link>
                             {/* Precisa do mutate para acessar a função criada lá em cima */}
                             <button onClick={() => mutation.mutate()}>Sair</button>
                         </div>
