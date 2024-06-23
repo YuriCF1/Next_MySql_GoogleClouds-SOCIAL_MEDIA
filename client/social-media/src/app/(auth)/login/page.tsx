@@ -8,6 +8,7 @@ import AuthButton from '../../../components/AuthButton';
 import { makeRequest } from '../../../../axios';
 import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
+import TestUser from '@/components/TestUser';
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -60,8 +61,8 @@ const Login = () => {
       </div>
       {error && <span className="text-red-700 mt-2">* {error}</span>}
       {success && <span className="text-green-700 mt-2">* {success}</span>}
+      <TestUser />
     </>
-    // </AuthPage >
   );
 };
 
