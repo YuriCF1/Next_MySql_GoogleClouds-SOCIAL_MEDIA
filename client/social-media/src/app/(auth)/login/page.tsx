@@ -47,8 +47,6 @@ const Login = () => {
     }
   }, [email, password]);
 
-  console.log(email, password);
-
   return (
     // <AuthPage> //O que era o Componente AuthPage, agora é o layout dentro da pasta (auth). Que considera auth como uma rota, 
     // ignorando a palavra na URL e utilizando o arquivo layout dentro da mesma como componente pai para englobar as rotas filhas
