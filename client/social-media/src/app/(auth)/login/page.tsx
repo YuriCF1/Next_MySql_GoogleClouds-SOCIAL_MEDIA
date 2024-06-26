@@ -11,8 +11,8 @@ import { UserContext } from '@/context/UserContext';
 import TestUser from '@/components/TestUser';
 
 const Login = () => {
-  const [email, setEmail] = useState('user@test.com')
-  const [password, setPassword] = useState('123456')
+  const [email, setEmail] = useState('test@email.com')
+  const [password, setPassword] = useState('iwouldlovetohelpyourteam')
   const [isFormValid, setIsFormValid] = useState(false)
 
   const [error, setError] = useState('');
