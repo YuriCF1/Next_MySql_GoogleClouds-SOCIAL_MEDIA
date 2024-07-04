@@ -71,7 +71,8 @@ const Login = () => {
       </div>
       {error && <span className="text-red-700 mt-2">* {error}</span>}
       {success && <span className="text-green-700 mt-2">* {success}</span>}
-      <button onClick={testLogin} className='bg-green-400 py-1 font-bold text-white rounded-lg hover:bg-green-800 mt-2 w-full'>Login with Test User</button>
+      {/* <button onClick={testLogin} className='bg-green-400 py-1 font-bold text-white rounded-lg hover:bg-green-800 mt-2 w-full'>Login with Test User</button> */}
+      <button onClick={testLogin} className='bg-green-400 py-1 font-bold text-white rounded-lg hover:bg-green-800 mt-2 w-full'>I'm currently searching for a free site to host SQL again</button>
       <TestUser />
     </>
   );
