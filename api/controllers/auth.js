@@ -21,7 +21,7 @@ export const register = (req, res) => {
   }
 
   db.query(
-    "SELECT email FROM user WHERE email = ?",
+    "SELECT email FROM users WHERE email = ?",
     [email],
     async (error, data) => {
       //Pode retornar um erro, ou um pacote de dados
@@ -44,7 +44,7 @@ export const register = (req, res) => {
         const salt = bcrypt.genSaltSync(saltRounds);
         const passwordHash = await bcrypt.hash(password, salt);
         db.query(
-          "INSERT INTO user SET ?",
+          "INSERT INTO users SET ?",
           {
             //Já que o nome no DB é o mesmo da variável, não preciso salvar como email:email
             username,
@@ -73,7 +73,7 @@ export const login = (req, res) => {
   const { email, password } = req.body;
 
   db.query(
-    "SELECT * FROM user WHERE email = ?",
+    "SELECT * FROM users WHERE email = ?",
     [email],
     async (error, data) => {
       if (error) {
