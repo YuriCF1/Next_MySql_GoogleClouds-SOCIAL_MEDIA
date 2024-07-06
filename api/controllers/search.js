@@ -7,7 +7,7 @@ export const searchUser = (req, res) => {
   }
 
   db.query(
-    "SELECT username, id, userImg, bgImg FROM user WHERE username LIKE ?",
+    "SELECT username, id, userImg, bgImg FROM users WHERE username LIKE ?",
     [params],
     (error, data) => {
       if (error) {
@@ -33,7 +33,7 @@ export const searchPost = (req, res) => {
   O operador LIKE é usado para comparação parcial com padrões. Ele permite o uso de curingas (% e _) para buscar valores que correspondem a um padrão específico.
   */
   db.query(
-    "SELECT p.*, u.username, userImg FROM posts AS p JOIN user AS u ON (u.id = p.userId) WHERE p.post_desc LIKE ? OR u.username LIKE ? ORDER BY created_at DESC",
+    "SELECT p.*, u.username, userImg FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.post_desc LIKE ? OR u.username LIKE ? ORDER BY created_at DESC",
     [params, params],
     (error, data) => {
       if (error) {

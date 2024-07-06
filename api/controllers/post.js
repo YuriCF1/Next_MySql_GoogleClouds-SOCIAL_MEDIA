@@ -24,7 +24,7 @@ export const createPost = (req, res) => {
 export const getPost = (req, res) => {
   if (req.query.id) {
     db.query(
-      "SELECT p.*, u.username, userImg FROM posts AS p JOIN user AS u ON (u.id = p.userId) WHERE u.id = ? ORDER BY created_at DESC",
+      "SELECT p.*, u.username, userImg FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE u.id = ? ORDER BY created_at DESC",
       [req.query.id],
       (error, data) => {
         if (error) {
@@ -39,7 +39,7 @@ export const getPost = (req, res) => {
     );
   } else {
     db.query(
-      "SELECT p.*, u.username, userImg FROM posts AS p JOIN user AS u ON (u.id = p.userId) ORDER BY created_at DESC",
+      "SELECT p.*, u.username, userImg FROM posts AS p JOIN users AS u ON (u.id = p.userId) ORDER BY created_at DESC",
       (error, data) => {
         if (error) {
           console.log(error);

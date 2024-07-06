@@ -21,7 +21,7 @@ export const addLike = (req, res) => {
 
 export const getLikes = (req, res) => {
   db.query(
-    "SELECT l.*, u.username FROM likes AS l JOIN user AS u ON (u.id = l.likes_user_id) WHERE likes_post_id = ?",
+    "SELECT l.*, u.username FROM likes AS l JOIN users AS u ON (u.id = l.likes_user_id) WHERE likes_post_id = ?",
     [req.query.likes_post_id],
     (error, data) => {
       if (error) {

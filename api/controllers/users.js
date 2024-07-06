@@ -8,7 +8,7 @@ export const getUser = (req, res) => {
   }
 
   db.query(
-    "SELECT username, userImg, bgImg FROM user WHERE id = ?",
+    "SELECT username, userImg, bgImg FROM users WHERE id = ?",
     [id],
     (error, data) => {
       if (error) {
@@ -32,7 +32,7 @@ export const updateUser = (req, res) => {
   }
 
   db.query(
-    "UPDATE user SET username = ?, userImg = ?, bgImg = ? WHERE id = ?",
+    "UPDATE users SET username = ?, userImg = ?, bgImg = ? WHERE id = ?",
     [username, userImg, bgImg, id],
     (error, data) => {
       if (error) {
